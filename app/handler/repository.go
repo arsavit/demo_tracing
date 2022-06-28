@@ -3,6 +3,9 @@ package handler
 import (
 	"context"
 	"demo_tracing/app/tracing"
+	"errors"
+
+	"go.opentelemetry.io/otel/codes"
 
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rs/zerolog/log"
@@ -18,6 +21,8 @@ func Save(ctx context.Context) {
 		defer span.End()
 	}
 	log.Info().Msg("Saving model")
+	span.RecordError(errors.New("error saving model"))
+	span.SetStatus(codes.Error, "critical error")
 	if tr != nil {
 		span.SetAttributes(
 			attribute.String("request-id", middleware.GetReqID(ctx)),
