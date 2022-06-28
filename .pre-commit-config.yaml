@@ -1,0 +1,30 @@
+fail_fast: false
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+      - id: detect-private-key
+      - id: end-of-file-fixer
+        exclude: app/server/schema/
+      - id: pretty-format-json
+        args: [ '--autofix' ]
+      - id: trailing-whitespace
+
+  - repo: https://github.com/golangci/golangci-lint
+    rev: v1.44.2
+    hooks:
+      - id: golangci-lint
+
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.8.0
+    hooks:
+      - id: hadolint
+        args: [ --ignore, DL3007, --ignore, DL3008, --ignore, DL3016, --ignore, DL3010, --ignore, DL3018 ]

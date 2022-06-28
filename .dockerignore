@@ -1,0 +1,8 @@
+**/*
+!Dockerfile
+!.gitignore
+!app/**
+!go.mod
+!go.sum
+!.golangci.yml
+!.pre-commit-config.yaml
