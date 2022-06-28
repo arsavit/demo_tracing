@@ -53,29 +53,28 @@ func TraceMiddleware(ctx context.Context) func(next http.Handler) http.Handler {
 
 			span.SetAttributes(attribute.String("request-id", middleware.GetReqID(newCtx)))
 
-			w.Header().Set(TraceIDHeader, spanContext.TraceID().String())
-			w.Header().Set(SpanIDHeader, spanContext.SpanID().String())
+			w.Header().Set(TraceIDHeader, span.SpanContext().TraceID().String())
 			next.ServeHTTP(w, r.WithContext(newCtx))
 		})
 	}
 }
 
 func newChildSpanContext(ctx context.Context, parentTraceID, parentSpanID string) trace.SpanContext {
-	var spanContext trace.SpanContext
+	var emptySpanContext trace.SpanContext
 	if parentTraceID == "" || parentSpanID == "" {
-		return spanContext
+		return emptySpanContext
 	}
 
 	traceID, err := trace.TraceIDFromHex(parentTraceID)
 	if err != nil {
 		log.Ctx(ctx).Error().Err(err).Msg("cannot parse parent traceID, using empty spanContext")
-		return spanContext
+		return emptySpanContext
 	}
 
 	spanID, err := trace.SpanIDFromHex(parentSpanID)
 	if err != nil {
 		log.Ctx(ctx).Error().Err(err).Msg("cannot parse parent spanID, using empty spanContext")
-		return spanContext
+		return emptySpanContext
 	}
 
 	var spanContextConfig trace.SpanContextConfig
@@ -83,9 +82,9 @@ func newChildSpanContext(ctx context.Context, parentTraceID, parentSpanID string
 	spanContextConfig.SpanID = spanID
 	spanContextConfig.TraceFlags = 0o1
 	spanContextConfig.Remote = true
-	spanContext = trace.NewSpanContext(spanContextConfig)
+	spanContext := trace.NewSpanContext(spanContextConfig)
 	if !spanContext.IsValid() {
-		return spanContext
+		return emptySpanContext
 	}
 	return spanContext
 }

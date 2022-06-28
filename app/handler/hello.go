@@ -34,7 +34,7 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 	_, _, err = client.Process(request)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Ctx(ctx).Error().Err(err).Msg("can't write to response writer")
+		log.Ctx(ctx).Error().Err(err).Msg("Can't process request to app_b")
 		return
 	}
 

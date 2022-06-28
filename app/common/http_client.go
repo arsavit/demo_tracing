@@ -65,7 +65,7 @@ func (lrt LoggingRoundTripper) RoundTrip(r *http.Request) (*http.Response, error
 		return response, nil
 	}
 
-	_, span := tr.Start(r.Context(), "http.request")
+	_, span := tr.Start(r.Context(), "http.request "+r.URL.String())
 	defer span.End()
 	r.Header.Add(tracing.TraceIDHeader, span.SpanContext().TraceID().String())
 	r.Header.Add(tracing.SpanIDHeader, span.SpanContext().SpanID().String())
