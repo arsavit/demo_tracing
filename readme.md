@@ -2,6 +2,10 @@
 
 ## start:
 ```shell
+docker compose up --build
+```
+or
+```shell
 docker-compose up --build
 ```
 
