@@ -174,4 +174,4 @@ linters-settings:
       - style
 
   goimports:
-    local-prefixes: git.chezaja.by/csoai/toto
+    local-prefixes: demo_tracing
